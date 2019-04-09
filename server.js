@@ -4,7 +4,7 @@ var express = require('express');
 var bodyParser = require('body-parser');
 var expect = require('chai').expect;
 var cors = require('cors');
-
+var dotenv = require('dotenv').config()
 var apiRoutes = require('./routes/api.js');
 var fccTestingRoutes = require('./routes/fcctesting.js');
 var runner = require('./test-runner');
@@ -29,15 +29,13 @@ fccTestingRoutes(app);
 
 //Routing for API 
 apiRoutes(app);
-app.get('/hello', function (req, res) {
-  res.json('t')
+
+// 404 Not Found Middleware
+app.use(function (req, res, next) {
+  res.status(404)
+    .type('text')
+    .send('Not Found');
 });
-//404 Not Found Middleware
-// app.use(function (req, res, next) {
-//   res.status(404)
-//     .type('text')
-//     .send('Not Found');
-// });
 
 //Start our server and tests!
 app.listen(process.env.PORT || 3000, function () {
