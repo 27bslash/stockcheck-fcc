@@ -20,8 +20,10 @@ suite('Functional Tests', function () {
     test('request works', function (done) {
       chai.request(server)
         .get('/api/stock-prices')
+        .query({ stock: 'goog' })
         .end(function (err, res) {
-          assert.notEqual(res.body, {})
+          assert.equal(res.status, 200)
+          done();
         })
     });
 
@@ -30,9 +32,7 @@ suite('Functional Tests', function () {
         .get('/api/stock-prices')
         .query({ stock: 'goog' })
         .end(function (err, res) {
-
-          //complete this one too
-
+          assert.equal(res.body.stock, 'goog')
           done();
         });
     });

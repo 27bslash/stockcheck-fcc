@@ -14,8 +14,10 @@
 		"dotenv": "^7.0.0",
 		"express": "^4.16.4",
 		"helmet": "^3.16.0",
+		"json": "^9.0.6",
 		"mocha": "^3.5.3",
 		"mongodb": "^2.2.36",
+		"node-fetch": "^2.3.0",
 		"request": "^2.88.0",
 		"zombie": "^5.0.8"
 	},
