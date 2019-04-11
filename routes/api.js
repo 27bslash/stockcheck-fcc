@@ -22,26 +22,62 @@ module.exports = function (app) {
 
   app.route('/api/stock-prices')
     .get(function (req, res) {
+      var url;
+      var url2;
       const query = req.query
       const symbol = query.stock
-      const url2 = `https://api.iextrading.com/1.0/stock/${symbol[1]}/quote`
-      const url = `https://api.iextrading.com/1.0/stock/${symbol[0]}/quote`
-
+      res.locals.obj1;
+      res.locals.obj2;
       const result = {
         stockData: {
           stock: symbol[0]
-          // price: obj.latestPrice,
+          // price: obj.latestPrice,  
         }
       }
       let getApi = (stock) => {
-      return new Promise((resolve,reject) => {
-        request(url, {json: true }, (err, res, body) => {
-          if (err) { return console.log(err)}
-          console.log(body)
+        let url = `https://api.iextrading.com/1.0/stock/${symbol}/quote`;
+        let stockData = {};
+        return new Promise((resolve, reject) => {
+          request(url, { json: true }, (err, res, body) => {
+            if (err) {
+              console.log(err)
+              return reject(err)
+            }
+            stockData.stock = body.symbol
+            stockData.price = body.latestPrice
+            console.log(stockData)
+            resolve(stockData)
+          })
         })
-      })
-    }
-    
+      }
+      let initStock = async (req, res, next) => {
+        res.locals.obj1 = {};
+        res.locals.obj2 = {};
+        try {
+          res.locals.obj1 = await getApi(req.query.stock1);
+        } catch (err) {
+          console.log(err);
+        }
+        if (req.query.stock2) {
+          console.log(req.query.stock2)
+          try {
+            res.locals.obj2 = await getApi(req.query.stock2);
+          } catch (err) {
+            console.log(err);
+          }
+        }
+        next()
+      }
+      initStock()
+      // return new Promise((resolve, reject) => {
+      //   request(url2, { json: true }, (err, res, body) => {
+      //     if (err) { return console.log(err) }
+      //     console.log(body.symbol)
+      //     resolve(body);
+      //   })
+      // })
+
+
       let urls = [url, url2];
 
 

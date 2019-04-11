@@ -27,15 +27,15 @@ suite('Functional Tests', function () {
         })
     });
 
-    test('1 stock', function (done) {
-      chai.request(server)
-        .get('/api/stock-prices')
-        .query({ stock: 'goog' })
-        .end(function (err, res) {
-          assert.equal(res.body.stock, 'goog')
-          done();
-        });
-    });
+    // test('1 stock', function (done) {
+    //   chai.request(server)
+    //     .get('/api/stock-prices')
+    //     .query({ stock: 'goog' })
+    //     .end(function (err, res) {
+    //       assert.equal(res.body.stock, 'goog')
+          // done();
+    //     });
+    // });
 
     test('1 stock with like', function (done) {
 

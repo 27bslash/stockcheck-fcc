@@ -6,6 +6,7 @@ var expect = require('chai').expect;
 var cors = require('cors');
 var dotenv = require('dotenv').config()
 var apiRoutes = require('./routes/api.js');
+var testRoutes = require('./routes/route-test.js')
 var fccTestingRoutes = require('./routes/fcctesting.js');
 var runner = require('./test-runner');
 
@@ -29,6 +30,7 @@ fccTestingRoutes(app);
 
 //Routing for API 
 apiRoutes(app);
+testRoutes(app);
 
 // 404 Not Found Middleware
 app.use(function (req, res, next) {
