@@ -22,78 +22,50 @@ module.exports = function (app) {
 
   app.route('/api/stock-prices')
     .get(function (req, res) {
-      var url;
-      var url2;
-      const query = req.query
-      const symbol = query.stock
-      res.locals.obj1;
-      res.locals.obj2;
-      const result = {
-        stockData: {
-          stock: symbol[0]
-          // price: obj.latestPrice,  
-        }
-      }
-      let getApi = (stock) => {
-        let url = `https://api.iextrading.com/1.0/stock/${symbol}/quote`;
-        let stockData = {};
-        return new Promise((resolve, reject) => {
-          request(url, { json: true }, (err, res, body) => {
-            if (err) {
-              console.log(err)
-              return reject(err)
-            }
-            stockData.stock = body.symbol
-            stockData.price = body.latestPrice
-            console.log(stockData)
-            resolve(stockData)
-          })
-        })
-      }
-      let initStock = async (req, res, next) => {
-        res.locals.obj1 = {};
-        res.locals.obj2 = {};
+      let symbol = req.query.stock
+      let realUrl = `https://api.iextrading.com/1.0/stock/${symbol}/quote`;
+      let realUrl1 = `https://api.iextrading.com/1.0/stock/${symbol[0]}/quote`;
+      let realUrl2 = `https://api.iextrading.com/1.0/stock/${symbol[1]}/quote`;
+
+      
+      const url = 'https://jsonplaceholder.typicode.com/users'
+
+      if (Array.isArray(symbol)) {
         try {
-          res.locals.obj1 = await getApi(req.query.stock1);
-        } catch (err) {
-          console.log(err);
+          let p1 = fetch(realUrl1).then(res => res.json())
+          let p2 = fetch(realUrl2).then(res => res.json())
+
+          Promise.all([p1, p2])
+            .then(json => {
+              let result1 = {};
+              let result2 = {};
+              result1.stock = json[0].symbol
+              result1.price = json[0].latestPrice
+              result2.stock = json[1].symbol
+              result2.price = json[1].latestPrice
+              JSON.stringify(result1);
+              console.log('result 1',typeof(result1), result1)
+              let string = `{"StockData": [${JSON.stringify(result1)},${JSON.stringify(result2)}]}`
+              // console.log('pls be a string       ', typeof(string), string)
+              res.send(string)
+            }).catch(err => console.log(err));
         }
-        if (req.query.stock2) {
-          console.log(req.query.stock2)
-          try {
-            res.locals.obj2 = await getApi(req.query.stock2);
-          } catch (err) {
-            console.log(err);
-          }
+        catch (error) {
+          console.log(error)
         }
-        next()
       }
-      initStock()
-      // return new Promise((resolve, reject) => {
-      //   request(url2, { json: true }, (err, res, body) => {
-      //     if (err) { return console.log(err) }
-      //     console.log(body.symbol)
-      //     resolve(body);
-      //   })
-      // })
-
-
-      let urls = [url, url2];
-
-
-
-      // request(url, function (error, response, body) {
-      //   if (error) {
-      //     res.status(404).send('error')
-      //   } else {
-      //     let obj = JSON.parse(body)
-      //     const object1 = {
-      //       stock: symbol,
-      //       price: obj.latestPrice
-      //     }
-      //     console.log(object1.stock)
-      //     res.status(200).send(object1)
-      //   }
-      // });
-    })
+      else {
+        fetch(realUrl)
+          .then(res => res.json())
+          .then(json => {
+            let result = {}
+            result.stock = json.symbol
+            result.price = json.latestPrice
+            let stockData = result
+            var obj = {stockData}
+            console.log(typeof(obj))
+            res.json(obj)
+          }).catch(err => console.log(err))
+      }
+    });
 }

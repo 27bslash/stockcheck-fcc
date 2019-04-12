@@ -8,6 +8,7 @@
 
 var chaiHttp = require('chai-http');
 var chai = require('chai');
+
 var assert = chai.assert;
 var server = require('../server');
 
@@ -27,15 +28,29 @@ suite('Functional Tests', function () {
         })
     });
 
-    // test('1 stock', function (done) {
-    //   chai.request(server)
-    //     .get('/api/stock-prices')
-    //     .query({ stock: 'goog' })
-    //     .end(function (err, res) {
-    //       assert.equal(res.body.stock, 'goog')
-          // done();
-    //     });
-    // });
+    test('1 stock', function (done) {
+      chai.request(server)
+        .get('/api/stock-prices')
+        .query({ stock: 'goog' })
+        .end(function (err, res) {
+          console.log('body test', res.body.stockData.stock)
+          assert.equal(res.status, 200)
+          assert.equal(res.body.stockData.stock, 'GOOG')
+          assert.isAtLeast(parseFloat(res.body.stockData.price), 0)
+          done();
+        });
+    });
+
+    test('2 stocks', function (done) {
+      chai.request(server)
+        .get('/api/stock-prices?stock=goog&stock=mu')
+        .end(function (err, res) {
+          let replaced = res.text.replace(/[^MU]/gi, '')
+
+          assert.equal(replaced, 'MU')
+          done();
+        });
+    });
 
     test('1 stock with like', function (done) {
 
@@ -45,9 +60,7 @@ suite('Functional Tests', function () {
 
     });
 
-    test('2 stocks', function (done) {
 
-    });
 
     test('2 stocks with like', function (done) {
 
