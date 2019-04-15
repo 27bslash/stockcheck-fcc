@@ -27,8 +27,7 @@ module.exports = function (app) {
       let realUrl1 = `https://api.iextrading.com/1.0/stock/${symbol[0]}/quote`;
       let realUrl2 = `https://api.iextrading.com/1.0/stock/${symbol[1]}/quote`;
 
-      
-      const url = 'https://jsonplaceholder.typicode.com/users'
+
 
       if (Array.isArray(symbol)) {
         try {

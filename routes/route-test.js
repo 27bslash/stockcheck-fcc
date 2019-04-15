@@ -16,6 +16,15 @@ module.exports = function (app) {
 
             const url = 'https://jsonplaceholder.typicode.com/users'
 
+            
+            (function example() {
+                // JavaScript interprets this as
+                // let a = ( b = ( c = 1 ) );
+                // The let keyword only applies to variable a; variables b and c become
+                // global variables.
+                let a = b = c = 1;
+              }());
+              
             if (Array.isArray(symbol)) {
                 console.log('we made it', realUrl1)
                 try {
