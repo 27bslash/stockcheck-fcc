@@ -33,7 +33,6 @@ suite("Functional Tests", function() {
         .get("/api/stock-prices")
         .query({ stock: "goog" })
         .end(function(err, res) {
-          console.log("body test", res.body.stockData.stock);
           assert.equal(res.status, 200);
           assert.equal(res.body.stockData.stock, "GOOG");
           assert.isAtLeast(parseFloat(res.body.stockData.price), 0);
@@ -46,9 +45,11 @@ suite("Functional Tests", function() {
         .request(server)
         .get("/api/stock-prices?stock=goog&stock=mu")
         .end(function(err, res) {
-          let replaced = res.text.replace(/[^MU]/gi, "");
-
-          assert.equal(replaced, "MU");
+          assert.equal(res.status, 200);
+          assert.equal(res.body.stockData[0].stock, 'GOOG');
+          assert.equal(res.body.stockData[1].stock, 'MU');
+          assert.isAtLeast(parseFloat(res.body.stockData[0].price), 0);
+          assert.isAtLeast(parseFloat(res.body.stockData[1].price), 0);
           done();
         });
     });
